@@ -20,32 +20,38 @@ def get_weather():
         base = "https://api.openweathermap.org/data/2.5/"
         local = f"weather?&lat={lat}&lon={lon}&appid={key}&units={units}" 
         urls.append(base+local)
-        #urls.append(f"https://api.openweathermap.org/data/2.5/weather?&lat={lat}&lon={lon}&appid={key}&units={units}")
 
+    # need to see what this returns when the key or url is wrong
     return [json.loads(requests.get(url).text) for url in urls if url]
 
 # main route
 @route("/")
 def weather_():
+    # put this in a try/except, have an error page if it fails
     data = get_weather()
     # main view
     return template("report_weather.tpl", data=data)
 
-# handle bad data in url
+# handle bad data in url --> remove, not needed
 @error(403)
 def mistake403(error):
     return "There was an error in the URL."
 
-# handle incorrect url
+# handle incorrect url --> remove, not needed
 @error(404)
 def mistake404(error):
     return "This page does not exist."
 
+# handle 500 internal server error
+
 # load keys and model 
-load_dotenv()
-key = os.getenv("KEY")
-units = os.getenv("UNITS")
-crds = read_json("./coords.json")
+try:
+    load_dotenv()
+    key = os.getenv("KEY")
+    units = os.getenv("UNITS")
+    crds = read_json("./coords.json")
+except:
+    print("keys, crds, and/or units failed to load")
 
 # hook for local dev with default host
 if __name__ == "__main__":
