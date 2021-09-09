@@ -2,7 +2,7 @@ import os
 import requests
 import json
 import bottle
-from bottle import route, template, run, error
+from bottle import route, template, run, error, abort
 from dotenv import load_dotenv
 
 
@@ -12,48 +12,56 @@ def read_json(fp):
         with open(fp, "r") as f:
             return json.load(f)
     except IOError as error:
-        print("coords did not load from file")
+        print("Coordinates did not load from file.")
 
 
 # query for weather data
-def get_weather():
-    urls = []
-    # this is an error point, from the server point of view
-    # AttributeError: NoneType for any item in the dict
+def get_weather(crds, key, unit):
+    data = []
+    
     try:
+        # if no crds error will raise
         for k,v in crds.items():
             lat = crds[k][0]
             lon = crds[k][1]
             base = "https://api.openweathermap.org/data/2.5/"
             local = f"weather?&lat={lat}&lon={lon}&appid={key}&units={units}" 
-            urls.append(base+local)
-    except AttributeError as error:
-        print(f"{error} --> nothing in the dictionary")
+            req = json.loads(requests.get(base+local).text)
+            data.append(req)
 
-    # need to see what this returns when the key or url is wrong
-    return [json.loads(requests.get(url).text) for url in urls if url]
+    except AttributeError as error:
+        print(f"{error}")  # or pass
+
+    finally:
+        # data returned will be none or a response
+        return data
 
 
 # main route
 @route("/")
 def weather_():
-    # put this in a try/except, have an error page if it fails
-    # if get_weather fails it will just return and empty list
-    # if data is empty a blank template will render
-    data = get_weather()
-    print(data) 
-    # main view
-    return template("report_weather.tpl", data=data)
-
-
-# handle 500 internal server error
+    data = get_weather(crds, key, units)
+    
+    # data present
+    if data:
+        # good data response
+        if data[0]["cod"] == 200:
+            return template("report_weather.tpl", data=data)
+        
+        # bad api key response
+        elif data[0]["cod"] == 401:
+            abort(401, "Invalid API key. Check key.")
+    
+    # none data
+    else:
+        abort(404, "Data response is empty. Check coordinates and API key.")
 
 
 # load keys and model, these are global variables 
-crds = read_json("./coords.json")
+crds = read_json("./coords.json")  # if broken returns none
 load_dotenv()
-key = os.getenv("KEY")
-units = os.getenv("UNITS")
+key = os.getenv("KEY")  # if broken returns 401 invalid api key
+units = os.getenv("UNITS")  # if broken fails silently, gives temp in kelvin
 
 
 # hook for gunicorn
