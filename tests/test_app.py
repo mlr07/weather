@@ -15,7 +15,7 @@ def test_get_weather():
     """
     integration test to confirm that weather data is returned form openweather.
 
-    test uses coordinate, api key, and units from config files in app.
+    test uses coordinates, api key, and units from config files in app.
 
     test passes if data is a list and status code in first response is 200.
 
@@ -23,6 +23,8 @@ def test_get_weather():
     """
 
     data = get_weather(crds, key, units)
+    assert data
     assert type(data) == list
+    assert type(data[0]) == dict
     assert data[0]["cod"] == 200
 
