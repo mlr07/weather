@@ -17,11 +17,12 @@ def test_get_weather():
 
     test uses coordinate, api key, and units from config files in app.
 
-    test passes if data exists and status code on response is 200.
+    test passes if data is a list and status code in first response is 200.
 
     if test fails something is wrong with the method or config files. 
     """
 
     data = get_weather(crds, key, units)
-    assert data and data[0]["cod"] == 200
+    assert type(data) == list
+    assert data[0]["cod"] == 200
 
