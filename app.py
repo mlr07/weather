@@ -30,7 +30,7 @@ def get_weather(crds, key, unit):
             data.append(req)
 
     except AttributeError as error:
-        print(f"{error}")  # or pass
+        print(f"{error}")  # log error 
 
     finally:
         # data returned will be none or a response
@@ -39,23 +39,17 @@ def get_weather(crds, key, unit):
 
 # main route
 @route("/")
-def weather_():
+def weather():
     data = get_weather(crds, key, units)
-    
-    # data present
-    if data:
-        # good data response
-        if data[0]["cod"] == 200:
-            return template("report_weather.tpl", data=data)
-        
-        # bad api key response
-        elif data[0]["cod"] == 401:
-            abort(401, "Invalid API key. Check key.")
-    
-    # none data
-    else:
-        abort(404, "Data response is empty. Check coordinates and API key.")
+    print(type(data))
+    print(data)
 
+    if data and data[0]["cod"] == 200:
+        return template("report_weather.tpl", data=data)
+    
+    else:
+        abort(404, "Something went wrong. Check logs.")
+    
 
 # load keys and model, these are global variables 
 crds = read_json("./coords.json")  # if broken returns none
