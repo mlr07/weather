@@ -1,3 +1,5 @@
+# figure out how to get .env to github and call from action yaml
+# refine up statements as needed
 name: weather integration test
 
 on: [push, pull_request]
