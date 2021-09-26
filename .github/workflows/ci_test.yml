@@ -15,6 +15,6 @@ jobs:
             - name: Install dependencies
               run: |
                   python -m pip install --upgrade pip
-                  pup install -r dev-requirements.txt
+                  pip install -r dev-requirements.txt
             - name: Test with pytest
               run: python -m pytest tests/
