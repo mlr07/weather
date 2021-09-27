@@ -1,5 +1,4 @@
 import os
-import sys
 import requests
 import json
 import bottle
@@ -59,9 +58,10 @@ if "KEY" in os.environ and "UNITS" in os.environ:
     key = os.environ.get("KEY")
     units = os.environ.get("UNITS")
 else:
-    load_dotenv()
+    load_dotenv()  # try and get away from this
     key = os.getenv("KEY")  # if broken returns 401 invalid api key
     units = os.getenv("UNITS")  # if broken gives temp in kelvin
+
 
 # hook for gunicorn
 app = bottle.default_app()
