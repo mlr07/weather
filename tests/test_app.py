@@ -22,7 +22,8 @@ def test_route_weather():
     """
     functional test to check weather route.
     """
-
+    
+    # check TestApp docs for env vars
     test_app = TestApp(app)
     resp = test_app.get("/")
 

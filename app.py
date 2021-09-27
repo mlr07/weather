@@ -1,4 +1,5 @@
 import os
+import sys
 import requests
 import json
 import bottle
@@ -52,10 +53,15 @@ def weather():
 
 # load keys and model, these are global variables 
 crds = read_json("./coords.json")  # if broken returns none
-load_dotenv()
-key = os.getenv("KEY")  # if broken returns 401 invalid api key
-units = os.getenv("UNITS")  # if broken fails silently, gives temp in kelvin
 
+
+if "KEY" in os.environ and "UNITS" in os.environ:
+    key = os.environ.get("KEY")
+    units = os.environ.get("UNITS")
+else:
+    load_dotenv()
+    key = os.getenv("KEY")  # if broken returns 401 invalid api key
+    units = os.getenv("UNITS")  # if broken gives temp in kelvin
 
 # hook for gunicorn
 app = bottle.default_app()
