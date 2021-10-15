@@ -41,7 +41,7 @@ def get_weather(crds, key, unit):
 @route("/")
 def weather():
     data = get_weather(crds, key, units)
-
+    
     # implicit boolean check on data, empty list is a list of nones...  
     if data and data[0]["cod"] == 200:
         return template("report_weather.tpl", data=data)
