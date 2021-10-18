@@ -1,31 +1,34 @@
 # Set Up
 
+general steps for local development and updating the webserver
+
 ## local
 
-git clone or pull from mlr/weather
+git clone or pull from `mlr/weather/<branch>`
 
-make venv and pip install dev-requirements.txt
+make `venv` and `pip install dev-requirements.txt`
 
-run tests with with python -m pytest tests/ from project root weather/
+run tests with with `python -m pytest tests/` from project root 
 
-run app locally with python app.py or gunicorn --workers=2 app:app
+run app locally with `python app.py` or `gunicorn --workers=2 app:app`
 
-make new branch for an issue and develop against it
+make a new branch for an issue and develop against it
 
-run tests after changes and push to remote branch at mlr/weather
+run tests locally after changes and push to remote branch
 
-on push to remote branch same tests will run in a CI runner
+on push to remote branch a CI runner will run tests
 
-on merge to master test in CI runner will run again
+on merge from branch to master a CI runner will run tests
 
-## linode vps
+tests are the same for local and CI runner
+
+## vps
 
 login to server via ssh and check for updates
 
-nginx web server and gunicorn wsgi are installed and managed with systemctl
+nginx web server and gunicorn wsgi are managed with systemctl
 
-app is ran as a service with systemd and follows same setup as local
+app runs as a service with systemd with same setup as local
 
 to update app pull latest from master and restart systemd service
 
-## issues
