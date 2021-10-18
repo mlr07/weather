@@ -22,13 +22,17 @@ on merge from branch to master a CI runner will run tests
 
 tests are the same for local and CI runner
 
-## vps
+## webserver
 
-login to server via ssh and check for updates
+login to server via `ssh` and check for updates
 
-nginx web server and gunicorn wsgi are managed with systemctl
+`nginx` web server and `gunicorn` wsgi are managed with `systemctl`
 
-app runs as a service with systemd with same setup as local
+app runs as a service with `systemd` with same setup as local
 
-to update app pull latest from master and restart systemd service
+to update app `git pull` latest from remote `mlr/weather/master`
+
+reload service with `systemctl deamon-reload`
+
+restart service with `systemctl restart app.service`
 
