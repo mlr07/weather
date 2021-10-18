@@ -28,3 +28,4 @@ app is ran as a service with systemd and follows same setup as local
 
 to update app pull latest from master and restart systemd service
 
+## issues
